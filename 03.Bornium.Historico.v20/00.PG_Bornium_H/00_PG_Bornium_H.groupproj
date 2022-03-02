@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{19BB5BDB-892A-467D-AAE1-23A10B45CF86}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="..\01.Servidor\01.Sistema\Bornium.H.Servidor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\04.Bornium.H.MongoDB\01.Sistema\Bornium.H.MongoDB.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\04.Bornium.H.MongoDB\99.TesteDll\TesteDll.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Bornium_H_Servidor">
+        <MSBuild Projects="..\01.Servidor\01.Sistema\Bornium.H.Servidor.dproj"/>
+    </Target>
+    <Target Name="Bornium_H_Servidor:Clean">
+        <MSBuild Projects="..\01.Servidor\01.Sistema\Bornium.H.Servidor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Bornium_H_Servidor:Make">
+        <MSBuild Projects="..\01.Servidor\01.Sistema\Bornium.H.Servidor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Bornium_H_MongoDB">
+        <MSBuild Projects="..\04.Bornium.H.MongoDB\01.Sistema\Bornium.H.MongoDB.dproj"/>
+    </Target>
+    <Target Name="Bornium_H_MongoDB:Clean">
+        <MSBuild Projects="..\04.Bornium.H.MongoDB\01.Sistema\Bornium.H.MongoDB.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Bornium_H_MongoDB:Make">
+        <MSBuild Projects="..\04.Bornium.H.MongoDB\01.Sistema\Bornium.H.MongoDB.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TesteDll">
+        <MSBuild Projects="..\04.Bornium.H.MongoDB\99.TesteDll\TesteDll.dproj"/>
+    </Target>
+    <Target Name="TesteDll:Clean">
+        <MSBuild Projects="..\04.Bornium.H.MongoDB\99.TesteDll\TesteDll.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TesteDll:Make">
+        <MSBuild Projects="..\04.Bornium.H.MongoDB\99.TesteDll\TesteDll.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Bornium_H_Servidor;Bornium_H_MongoDB;TesteDll"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Bornium_H_Servidor:Clean;Bornium_H_MongoDB:Clean;TesteDll:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Bornium_H_Servidor:Make;Bornium_H_MongoDB:Make;TesteDll:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
