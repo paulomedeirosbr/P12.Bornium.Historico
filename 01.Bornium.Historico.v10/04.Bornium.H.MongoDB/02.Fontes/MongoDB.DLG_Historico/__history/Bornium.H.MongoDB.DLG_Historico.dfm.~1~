@@ -25,6 +25,7 @@ object DLG_DHistorico: TDLG_DHistorico
     Align = alTop
     BevelOuter = bvLowered
     TabOrder = 0
+    ExplicitWidth = 1375
     object Label1: TLabel
       Left = 32
       Top = 16
@@ -79,6 +80,7 @@ object DLG_DHistorico: TDLG_DHistorico
     Align = alTop
     BevelOuter = bvLowered
     TabOrder = 1
+    ExplicitWidth = 1375
     object Panel1: TPanel
       Left = 1
       Top = 1
@@ -149,6 +151,7 @@ object DLG_DHistorico: TDLG_DHistorico
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 1375
     object Splitter1: TSplitter
       Left = 345
       Top = 0
@@ -165,6 +168,7 @@ object DLG_DHistorico: TDLG_DHistorico
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 1020
       object Panel4: TPanel
         Left = 0
         Top = 0
@@ -181,6 +185,7 @@ object DLG_DHistorico: TDLG_DHistorico
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        ExplicitWidth = 1020
       end
       object DBGrid2: TDBGrid
         Left = 0
