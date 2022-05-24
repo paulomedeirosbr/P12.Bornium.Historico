@@ -1,0 +1,11 @@
+object DAO_Mongo: TDAO_Mongo
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
+  Height = 267
+  Width = 356
+  object PythonEngine: TPythonEngine
+    Left = 56
+    Top = 32
+  end
+end

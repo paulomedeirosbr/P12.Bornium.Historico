@@ -1,0 +1,96 @@
+program Bornium.Historico.Servidor;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  Horse,
+  REst.json,
+  JSON,
+  DTM_Teste in 'C:\TesteDelphiPython\DTM_Teste\DTM_Teste.pas',
+  System.SysUtils {DTeste: TDataModule},
+  br.Bornium.Comum.A01_001.TIPO_TRegistroLog in 'D:\02.P00.Pacotes.Comum\PAC_A01.CPX\Comum.A01_001.DeclaracaoTipo.CPX\02_Fontes.CPX\br.Bornium.Comum.A01_001.TIPO_TRegistroLog.pas';
+
+var
+  DTeste       :TDTeste;
+  oRegistroLog :TRegistroLog;
+
+Const
+ XXX =
+
+ 'import pymongo ' + sLineBreak +
+ 'client = pymongo.MongoClient("mongodb+srv://borniumadm:axmafraX3324@cluster0.xlelb.mongodb.net/?retryWrites=true&w=majority") '+  sLineBreak +
+ 'a = client.get_database("Bornium") ' +  sLineBreak +
+ 'b = a.get_collection("PAIS") ' + sLineBreak +
+ 'x = { ''cdPais'': 121, ''nome'':''paulo cesar medeiros''} '+ sLineBreak +
+ 'b.insert_one(x) ' + sLineBreak ;
+
+begin
+  THorse.Get('/ping',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+
+    var
+      oArray   :TJSonArray;
+      jResult  :TJSonObject;
+      jCodigo  :TJSonObject;
+
+    begin
+
+      DTeste := TDTeste.Create(nil);
+      DTeste.executar(XXX);
+
+      oRegistroLog       :=TRegistroLog.create;
+      oXX.a:= 1;
+      oXX.b:= 2;
+
+      oArray:= TJSonArray.Create;
+      oArray.AddElement(TJson.ObjectToJsonObject(oXX));
+
+      oyy:= TJson.JsonToObject<TInfox>(oArray.Get(0).ToJSON);
+
+
+   //   Result := TJSONObject.Create;
+   //   Result.AddPair(TJSONPair.Create('Resultado', TJSONString.Create('0')));
+
+      jResult:= TJSonObject.Create();
+      jResult.AddPair(TJSONPair.Create('result', oArray.toString));
+
+      Res.Send(jResult.ToString);
+
+      FreeAndNil(DTeste);
+
+    end);
+
+  THorse.Listen(9000);
+
+(*
+
+function TDAO_FCadPais.cancelRegistro(ACodEmpresa, ACodPaisEmp: Integer): TJSONObject;
+var
+  InfoSQL :String;
+begin
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  with oAdmin.SGDB do begin
+     InfoRegistro.NomeTabela:= 'PAIS';
+     InfoRegistro.Inicio;
+
+     InfoRegistro.InserirFiltro('cdEmpresa', ACodEmpresa.ToString);
+     InfoRegistro.InserirFiltro('cdPaisEmp', ACodPaisEmp.ToString);
+
+     InfoSQL:= InfoRegistro.RecSQL_Delete;
+
+  end;
+
+  oAdmin.SGDB.ExecSQL(InfoSQL);
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Result := TJSONObject.Create;
+  Result.AddPair(TJSONPair.Create('Resultado', TJSONString.Create('0')));
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+end;
+
+
+
+*)
+
+end.

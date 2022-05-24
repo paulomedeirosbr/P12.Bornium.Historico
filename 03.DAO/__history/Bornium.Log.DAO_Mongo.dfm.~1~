@@ -1,0 +1,9 @@
+object DTeste: TDTeste
+  OldCreateOrder = False
+  Height = 125
+  Width = 171
+  object PythonEngine1: TPythonEngine
+    Left = 56
+    Top = 32
+  end
+end

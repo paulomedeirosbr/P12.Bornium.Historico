@@ -1,0 +1,52 @@
+program Bornium.Historico.Servidor;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  Horse,
+  Horse.Jhonson,
+  REst.json,
+  JSON,
+  DTM_Teste in 'C:\TesteDelphiPython\DTM_Teste\DTM_Teste.pas',
+  System.SysUtils {DTeste: TDataModule},
+  br.Bornium.Comum.A01_001.TIPO_TRegistroLog in 'D:\02.P00.Pacotes.Comum\PAC_A01.CPX\Comum.A01_001.DeclaracaoTipo.CPX\02_Fontes.CPX\br.Bornium.Comum.A01_001.TIPO_TRegistroLog.pas',
+  Bornium.Log.Controller in '..\02.Controller\Bornium.Log.Controller.pas';
+
+var
+  DTeste       :TDTeste;
+
+Const
+ XXX =
+   'import pymongo ' + sLineBreak +
+   'client = pymongo.MongoClient("mongodb+srv://borniumadm:axmafraX3324@cluster0.xlelb.mongodb.net/?retryWrites=true&w=majority") '+  sLineBreak +
+   'a = client.get_database("Bornium") ' +  sLineBreak +
+   'b = a.get_collection("PAIS") ' + sLineBreak +
+   'x = { ''cdPais'': 121, ''nome'':''paulo cesar medeiros''} '+ sLineBreak +
+   'b.insert_one(x) ' + sLineBreak ;
+
+begin
+  THorse.Use(Jhonson());
+
+  Bornium.Log.Controller.register;
+
+  THorse.Post('/ping',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    var
+      LBody: TJSONObject;
+    begin
+      DTeste := TDTeste.Create(nil);
+
+      DTeste.executar(XXX);
+
+      LBody := Req.Body<TJSONObject>;
+      Res.Send<TJSONObject>(LBody);
+
+      FreeAndNil(DTeste);
+
+    end);
+
+  THorse.Listen(9000);
+
+end.
