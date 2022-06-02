@@ -30,6 +30,7 @@ var
   oBody     : TJSONValue;
 begin
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+(*
   DAO:= TDAO_Mongo.Create(nil);
   try
     try
@@ -57,6 +58,9 @@ begin
   finally
      FreeAndNil(DAO);
   end;
+*)
+
+  res.Send('Erro ao Recuperar o Log');
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 end;
 
@@ -69,18 +73,8 @@ var
   DAO   : TDAO_Mongo;
   info  : String;
 
-  oJson :TJSONObject;
-
-
-Const XXX =
-   'import pymongo ' + sLineBreak +
-   'client = pymongo.MongoClient("mongodb+srv://borniumadm:axmafraX3324@cluster0.xlelb.mongodb.net/?retryWrites=true&w=majority") '+  sLineBreak +
-
-   'a = client.get_database("Bornium") ' +  sLineBreak +
-   'b = a.get_collection("PAIS") ' + sLineBreak +
-   'x = { ''cdPais'': 121, ''nome'':''paulo cesar medeiros''} '+ sLineBreak +
-   'b.insert_one(x) ' + sLineBreak ;
-
+  JSArray  : TJSONArray;
+  JSObject : TJSONObject;
 
 Const XXX1 =
 
@@ -88,27 +82,34 @@ Const XXX1 =
 'client = pymongo.MongoClient("mongodb+srv://borniumadm:axmafraX3324@cluster0.xlelb.mongodb.net/?retryWrites=true&w=majority") ' + sLineBreak +
 'a = client.get_database("Bornium") ' + sLineBreak +
 'b = a.get_collection("PAIS") ' + sLineBreak +
-'ListaRegistro =b.find() ' + sLineBreak +
+'ListaRegistro =b.find({},{"_id":0}) ' + sLineBreak +
+'xxx = [] ' + sLineBreak +
+
 'for Registro in ListaRegistro: ' + sLineBreak +
-'    print(Registro) ' + sLineBreak;
+'    xxx.append(Registro) ' + sLineBreak +
+'print(xxx)' + sLineBreak;
 
 begin
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+(*
   DAO:= TDAO_Mongo.Create(nil);
   try
     try
       Info:= DAO.ExecutarGet(XXX1);
-      oJson:= TJSONObject.Create;
-      oJson.AddPair(TJSONPair.Create('result', info));
+      JSArray:= TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Info), 0) as TJSONArray;
 
-
-      Res.Send(oJson.ToJSON);
+      JSObject:= TJSONObject.Create;
+      JSObject.AddPair(TJSONPair.Create('result', JSArray));
+      Res.Send(JSObject.ToJSON);
     except
       res.Send('Erro ao Recuperar o Log');
     end;
   finally
     FreeAndNil(DAO);
   end;
+*)
+
+  res.Send('Erro ao Recuperar o Log');
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 end;
 
