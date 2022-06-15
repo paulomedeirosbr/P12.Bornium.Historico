@@ -1,0 +1,32 @@
+unit Bornium.Log.CodFontePython;
+
+interface
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Const
+  SistemaPyton_RegistroInserir =
+    'import pymongo ' + sLineBreak +
+   'client = pymongo.MongoClient("mongodb+srv://borniumadm:axmafraX3324@cluster0.xlelb.mongodb.net/?retryWrites=true&w=majority") '+  sLineBreak +
+   'a = client.get_database("Bornium") ' +  sLineBreak +
+   'b = a.get_collection("PAIS") ' + sLineBreak +
+   'x = { ''cdPais'': 121, ''nome'':''paulo cesar medeiros''} '+ sLineBreak +
+   'b.insert_one(x) ' + sLineBreak ;
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Const
+  SistemaPyton_RegistroRecuperar =
+    'import pymongo ' + sLineBreak +
+    'client = pymongo.MongoClient("mongodb+srv://borniumadm:axmafraX3324@cluster0.xlelb.mongodb.net/?retryWrites=true&w=majority") ' + sLineBreak +
+    'BaseDados = client.get_database("Bornium") '             + sLineBreak +
+    'Colecao = BaseDados.get_collection("PAIS") '             + sLineBreak +
+    'ListaRegistro = Colecao.find({<P01><P02>},{"_id":0}) '   + sLineBreak +
+    'jArray = [] '                                            + sLineBreak +
+    'for Registro in ListaRegistro: '                         + sLineBreak +
+    '  jArray.append(Registro) '                              + sLineBreak +
+    'print(jArray)'                                           + sLineBreak;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+implementation
+
+end.

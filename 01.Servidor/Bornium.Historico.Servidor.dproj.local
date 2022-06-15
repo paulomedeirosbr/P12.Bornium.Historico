@@ -14,14 +14,18 @@
     <Transaction>2022/05/11 01:19:59.000.203,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2022/05/18 17:35:28.000.142,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2022/05/19 10:03:54.000.476,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2022/05/20 14:57:18.000.461,D:\02.P12.Bornium.Historico\01.Servidor\Bornium.Historico.Servidor.dproj=C:\Users\user\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2022/05/20 14:57:18.000.461,C:\Users\user\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\02.P12.Bornium.Historico\01.Servidor\Bornium.Historico.Servidor.dproj</Transaction>
     <Transaction>2022/05/20 15:01:03.000.165,=C:\TesteDelphiPython\DTM_Teste\DTM_Teste.pas</Transaction>
     <Transaction>2022/05/21 06:44:19.000.906,=D:\02.P12.Bornium.Historico\01.Servidor\Unit1.pas</Transaction>
-    <Transaction>2022/05/21 06:45:07.000.837,D:\02.P00.Pacotes.Comum\PAC_A01.CPX\Comum.A01_001.DeclaracaoTipo.CPX\02_Fontes.CPX\br.Bornium.Comum.A01_001.TIPO_TRegistroLog.pas=D:\02.P12.Bornium.Historico\01.Servidor\Unit1.pas</Transaction>
+    <Transaction>2022/05/21 06:45:07.000.837,D:\02.P12.Bornium.Historico\01.Servidor\Unit1.pas=D:\02.P00.Pacotes.Comum\PAC_A01.CPX\Comum.A01_001.DeclaracaoTipo.CPX\02_Fontes.CPX\br.Bornium.Comum.A01_001.TIPO_TRegistroLog.pas</Transaction>
     <Transaction>2022/05/21 09:12:38.000.587,=D:\02.P12.Bornium.Log\02.Controller\Bornium.Log.Controller.pas</Transaction>
     <Transaction>2022/05/21 09:23:28.000.939,=D:\02.P12.Bornium.Log\02.Controller\Bornium.Log.Controller.pas</Transaction>
     <Transaction>2022/05/21 09:25:25.000.041,=C:\TesteDelphiPython\DTM_Teste\DTM_Teste.pas</Transaction>
-    <Transaction>2022/05/21 09:36:09.000.193,D:\02.P12.Bornium.Log\03.DAO\Bornium.Log.DAO_Mongo.dfm=C:\TesteDelphiPython\DTM_Teste\DTM_Teste.dfm</Transaction>
-    <Transaction>2022/05/21 09:36:09.000.193,D:\02.P12.Bornium.Log\03.DAO\Bornium.Log.DAO_Mongo.pas=C:\TesteDelphiPython\DTM_Teste\DTM_Teste.pas</Transaction>
+    <Transaction>2022/05/21 09:36:09.000.193,C:\TesteDelphiPython\DTM_Teste\DTM_Teste.dfm=D:\02.P12.Bornium.Log\03.DAO\Bornium.Log.DAO_Mongo.dfm</Transaction>
+    <Transaction>2022/05/21 09:36:09.000.193,C:\TesteDelphiPython\DTM_Teste\DTM_Teste.pas=D:\02.P12.Bornium.Log\03.DAO\Bornium.Log.DAO_Mongo.pas</Transaction>
+    <Transaction>2022/06/11 01:07:20.000.582,=D:\02.P12.Bornium.Log\01.Servidor\Unit1.pas</Transaction>
+    <Transaction>2022/06/11 01:08:20.000.329,D:\02.P12.Bornium.Log\04.CodFontePython\Bornium.Log.CodFontePython.pas=D:\02.P12.Bornium.Log\01.Servidor\Unit1.pas</Transaction>
+    <Transaction>2022/06/11 01:39:39.000.899,D:\02.P12.Bornium.Log\03.DAO\Bornium.Log.DAO_Mongo.dfm=D:\02.P12.Bornium.Log\03.OBJ_MongoBD\Bornium.Log.OBJ_MongoBD.dfm</Transaction>
+    <Transaction>2022/06/11 01:39:39.000.899,D:\02.P12.Bornium.Log\03.DAO\Bornium.Log.DAO_Mongo.pas=D:\02.P12.Bornium.Log\03.OBJ_MongoBD\Bornium.Log.OBJ_MongoBD.pas</Transaction>
   </Transactions>
 </BorlandProject>

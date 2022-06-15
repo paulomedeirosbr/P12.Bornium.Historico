@@ -1,0 +1,33 @@
+program Bornium.Historico.Servidor;
+
+uses
+  Horse,
+  Horse.Jhonson,
+  Bornium.Log.Controller in '..\02.Controller\Bornium.Log.Controller.pas',
+  Bornium.Log.DAO_Mongo in '..\03.DAO\Bornium.Log.DAO_Mongo.pas' {DAO_Mongo_: TDataModule},
+  System.SysUtils {DAO_Mongo: TDataModule},
+  Bornium.Log.CodFontePython in '..\04.CodFontePython\Bornium.Log.CodFontePython.pas';
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+begin
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  THorse.Use(Jhonson());
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Bornium.Log.Controller.registry;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  THorse.Listen(9000,
+  procedure (Horse :THorse)
+  begin
+    Writeln('');
+    Writeln('======================================================');
+    Writeln(' >> SERVIDOR MONGO DB <<                              ');
+    Writeln('======================================================');
+    Writeln(Format('Servidor Rodando na Porta %d', [Horse.port]));
+    Writeln('======================================================');
+  end
+  )
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+end.

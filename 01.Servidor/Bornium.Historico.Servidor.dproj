@@ -129,11 +129,12 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="..\02.Controller\Bornium.Log.Controller.pas"/>
-        <DCCReference Include="..\03.DAO\Bornium.Log.DAO_Mongo.pas">
-            <Form>DAO_Mongo</Form>
+        <DCCReference Include="..\03.OBJ_MongoBD\Bornium.Log.OBJ_MongoBD.pas">
+            <Form>OBJ_MongoBD</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\04.CodFontePython\Bornium.Log.CodFontePython.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

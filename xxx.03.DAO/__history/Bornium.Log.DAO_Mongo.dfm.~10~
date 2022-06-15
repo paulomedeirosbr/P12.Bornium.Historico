@@ -1,0 +1,29 @@
+object DAO_Mongo: TDAO_Mongo
+  Left = 0
+  Top = 0
+  ClientHeight = 228
+  ClientWidth = 340
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
+  PixelsPerInch = 96
+  TextHeight = 13
+  object PythonEngine: TPythonEngine
+    IO = PythonInputOutput
+    Left = 48
+    Top = 48
+  end
+  object PythonInputOutput: TPythonInputOutput
+    OnSendData = PythonInputOutputSendData
+    UnicodeIO = False
+    RawOutput = False
+    Left = 184
+    Top = 48
+  end
+end

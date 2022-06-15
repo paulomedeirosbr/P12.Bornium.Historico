@@ -1,0 +1,144 @@
+unit Bornium.Log.Controller;
+
+interface
+
+procedure registry;
+
+implementation
+
+uses
+  Horse, System.SysUtils, System.JSON,
+  System.StrUtils, Bornium.Log.CodFontePython,
+  Bornium.Log.OBJ_MongoBD;
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+procedure ExecutarPost(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  oMongoDB  : TOBJ_MongoBD;
+  info      : String;
+  oRegistro : TJSONObject;
+  oBody     : TJSONValue;
+
+  SisPyton :WideString;
+  P        :Array[1..2] of String;
+begin
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  if req.Body = '' then begin
+    res.Send('{'+TJSONPair.Create('result','[[]]').ToJSON+'}');
+    Exit;
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  try
+    oMongoDB:= TOBJ_MongoBD.Create(nil);
+  except
+    raise
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  try
+    oBody := TJSonObject.ParseJSONValue(TEncoding.UTF8.getBytes(req.Body),0) as TJSONValue;
+  except
+    raise;
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  try
+//    Info:= oMongoDB.ExecutarPost2(oBody.ToJSON);
+
+    SisPyton:= SistemaPyton_RegistroRecuperar;
+
+    SisPyton:= StringReplace(SisPyton,'<P01>', P[1] , [rfReplaceAll, rfIgnoreCase]);
+
+    Info:= oMongoDB.ExecutarPost2(SisPyton);
+
+
+      oRegistro := TJSONObject.Create;
+      try
+        oRegistro.AddPair(TJSONPair.Create('Resultado', TJSONString.Create('0')));
+        Res.Send(TJSONPair.Create('result', oRegistro.ToJSON).ToJSON);
+
+         res.Send('{'+TJSONPair.Create('result','[[]]').ToJSON+'}');
+      finally
+        FreeAndNil(oRegistro);
+      end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+    except
+       res.Send('{'+TJSONPair.Create('result','[[]]').ToJSON+'}');
+    end;
+  finally
+     FreeAndNil(oMongoDB);
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+end;
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+procedure ExecutarGet(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  oMongoDB  : TOBJ_MongoBD;
+  info      : String;
+
+  JSArray   : TJSONArray;
+  JSObject  : TJSONObject;
+
+  ACodEmpresa  :String;
+  ACodRegistro :String;
+
+Const
+  CTE_BRANCO       = '';
+
+var
+  SisPyton :WideString;
+  P        :Array[1..2] of String;
+
+begin
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  ACodEmpresa := Req.Params['ACodEmpresa'];
+  ACodRegistro:= Req.Params['ACodRegistro'];
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  P[1]:= '"regCodigoEmp":'+ACodEmpresa;
+  P[2]:= IfThen(ACodRegistro =  '<TODOS>',CTE_BRANCO,',"regCodigoItem":'+QuotedStr(ACodRegistro));
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  SisPyton:= SistemaPyton_RegistroRecuperar;
+  SisPyton:= StringReplace(SisPyton,'<P01>', P[1] , [rfReplaceAll, rfIgnoreCase]);
+  SisPyton:= StringReplace(SisPyton,'<P02>', P[2] , [rfReplaceAll, rfIgnoreCase]);
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  try
+    oMongoDB:= TOBJ_MongoBD.Create(nil);
+  except
+    raise;
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  try
+    try
+      Info:= oMongoDB.ExecutarGet(SisPyton);
+      JSArray:= TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Info), 0) as TJSONArray;
+
+      JSObject:= TJSONObject.Create;
+      JSObject.AddPair(TJSONPair.Create('result', JSArray));
+      Res.Send(JSObject.ToJSON);
+    except
+      res.Send('Erro ao Recuperar o Log');
+    end;
+  finally
+    FreeAndNil(oMongoDB);
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+end;
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+procedure registry;
+begin
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  THorse.get  ('/bornium.log/:ACodEmpresa/:ACodRegistro',ExecutarGet);
+  THorse.post ('/bornium.log',ExecutarPost);
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+end;
+
+end.

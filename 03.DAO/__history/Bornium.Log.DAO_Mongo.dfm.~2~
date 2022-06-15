@@ -1,9 +1,0 @@
-object DAO_Mongo: TDAO_Mongo
-  OldCreateOrder = False
-  Height = 267
-  Width = 356
-  object PythonEngine1: TPythonEngine
-    Left = 56
-    Top = 32
-  end
-end

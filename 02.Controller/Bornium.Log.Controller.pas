@@ -7,16 +7,9 @@ procedure registry;
 implementation
 
 uses
-  Horse, Bornium.Log.DAO_Mongo, System.SysUtils, System.JSON;
-
-Const XXX =
-   'import pymongo ' + sLineBreak +
-   'client = pymongo.MongoClient("mongodb+srv://borniumadm:axmafraX3324@cluster0.xlelb.mongodb.net/?retryWrites=true&w=majority") '+  sLineBreak +
-   'a = client.get_database("Bornium") ' +  sLineBreak +
-   'b = a.get_collection("PAIS") ' + sLineBreak +
-   'x = { ''cdPais'': 121, ''nome'':''paulo cesar medeiros''} '+ sLineBreak +
-   'b.insert_one(x) ' + sLineBreak ;
-
+  Horse, System.SysUtils, System.JSON,
+  System.StrUtils, Bornium.Log.CodFontePython,
+  Bornium.Log.OBJ_MongoBD;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -24,38 +17,52 @@ Const XXX =
 
 procedure ExecutarPost(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
-  DAO       : TDAO_Mongo;
+  oMongoDB  : TOBJ_MongoBD;
   info      : String;
   oRegistro : TJSONObject;
   oBody     : TJSONValue;
+
+  SisPyton :WideString;
+  P        :Array[1..2] of String;
 begin
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-  DAO:= TDAO_Mongo.Create(nil);
-  try
-    try
-      if req.Body = '' then begin
-        res.Send('{'+TJSONPair.Create('result','[[]]').ToJSON+'}');
-        exit;
-      end;
-
-      oBody := TJSonObject.ParseJSONValue(TEncoding.UTF8.getBytes(req.Body),0) as TJSONValue;
-
-      Info:= DAO.ExecutarPost(oBody.ToJSON);
-      oRegistro := TJSONObject.Create;
-      try
-        oRegistro.AddPair(TJSONPair.Create('Resultado', TJSONString.Create('0')));
-        Res.Send(TJSONPair.Create('result', oRegistro.ToJSON).ToJSON);
-
-         res.Send('{'+TJSONPair.Create('result','[[]]').ToJSON+'}');
-      finally
-        FreeAndNil(oRegistro);
-      end;
+  if req.Body = '' then begin
+    res.Send('{'+TJSONPair.Create('result','[[]]').ToJSON+'}');
+    Exit;
+  end;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-    except
-       res.Send('{'+TJSONPair.Create('result','[[]]').ToJSON+'}');
+  try
+    oMongoDB:= TOBJ_MongoBD.Create(nil);
+  except
+    raise
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  try
+    oBody := TJSonObject.ParseJSONValue(TEncoding.UTF8.getBytes(req.Body),0) as TJSONValue;
+  except
+    raise;
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  try
+    SisPyton:= SistemaPyton_RegistroInserir;
+
+    SisPyton:= StringReplace(SisPyton,'<OBJ_JSON>', oBody.ToJSON , [rfReplaceAll, rfIgnoreCase]);
+
+    Info:= oMongoDB.Executar(SisPyton);
+
+
+    oRegistro := TJSONObject.Create;
+    try
+//      oRegistro.AddPair(TJSONPair.Create('Resultado', TJSONString.Create('0')));
+//      Res.Send(TJSONPair.Create('result', oRegistro.ToJSON).ToJSON);
+
+       Res.Send('{'+TJSONPair.Create('result','[[]]').ToJSON+'}');
+    finally
+      FreeAndNil(oRegistro);
     end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
   finally
-     FreeAndNil(DAO);
+     FreeAndNil(oMongoDB);
   end;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 end;
@@ -66,31 +73,43 @@ end;
 
 procedure ExecutarGet(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
-  DAO   : TDAO_Mongo;
-  info  : String;
+  oMongoDB  : TOBJ_MongoBD;
+  info      : String;
 
-  JSArray  : TJSONArray;
-  JSObject : TJSONObject;
+  JSArray   : TJSONArray;
+  JSObject  : TJSONObject;
 
-Const XXX1 =
+  ACodEmpresa  :String;
+  ACodRegistro :String;
 
-'import pymongo ' + sLineBreak +
-'client = pymongo.MongoClient("mongodb+srv://borniumadm:axmafraX3324@cluster0.xlelb.mongodb.net/?retryWrites=true&w=majority") ' + sLineBreak +
-'a = client.get_database("Bornium") ' + sLineBreak +
-'b = a.get_collection("PAIS") ' + sLineBreak +
-'ListaRegistro =b.find({},{"_id":0}) ' + sLineBreak +
-'xxx = [] ' + sLineBreak +
+Const
+  CTE_BRANCO       = '';
 
-'for Registro in ListaRegistro: ' + sLineBreak +
-'    xxx.append(Registro) ' + sLineBreak +
-'print(xxx)' + sLineBreak;
+var
+  SisPyton :WideString;
+  P        :Array[1..2] of String;
 
 begin
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-  DAO:= TDAO_Mongo.Create(nil);
+  ACodEmpresa := Req.Params['ACodEmpresa'];
+  ACodRegistro:= Req.Params['ACodRegistro'];
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  P[1]:= '"regCodigoEmp":'+ACodEmpresa;
+  P[2]:= IfThen(ACodRegistro =  '<TODOS>',CTE_BRANCO,',"regCodigoItem":'+QuotedStr(ACodRegistro));
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  SisPyton:= SistemaPyton_RegistroRecuperar;
+  SisPyton:= StringReplace(SisPyton,'<P01>', P[1] , [rfReplaceAll, rfIgnoreCase]);
+  SisPyton:= StringReplace(SisPyton,'<P02>', P[2] , [rfReplaceAll, rfIgnoreCase]);
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  try
+    oMongoDB:= TOBJ_MongoBD.Create(nil);
+  except
+    raise;
+  end;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
   try
     try
-      Info:= DAO.ExecutarGet(XXX1);
+      Info:= oMongoDB.Executar(SisPyton);
       JSArray:= TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Info), 0) as TJSONArray;
 
       JSObject:= TJSONObject.Create;
@@ -100,7 +119,7 @@ begin
       res.Send('Erro ao Recuperar o Log');
     end;
   finally
-    FreeAndNil(DAO);
+    FreeAndNil(oMongoDB);
   end;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 end;
@@ -112,9 +131,13 @@ end;
 procedure registry;
 begin
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-  THorse.get  ('/bornium.log',ExecutarGet);
+  THorse.get  ('/bornium.log/:ACodEmpresa/:ACodRegistro',ExecutarGet);
   THorse.post ('/bornium.log',ExecutarPost);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 end;
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 end.
